@@ -1,8 +1,12 @@
 import {QueryClient, QueryClientProvider, useQuery} from "react-query";
-function useGetEmojis() {
-  return useQuery("repoData", () =>
-    fetch("https://emojihub.yurace.pro/api/random").then(res => res.json())
+
+function useGetEmojisCategory(category: string) {
+  const apiUrl =
+    category === "random"
+      ? "https://emojihub.yurace.pro/api/random"
+      : `https://emojihub.yurace.pro/api/random/category/${category}`;
+  return useQuery(["repoData", category], () =>
+    fetch(apiUrl).then(res => res.json())
   );
 }
-
-export {useGetEmojis};
+export {useGetEmojisCategory};
