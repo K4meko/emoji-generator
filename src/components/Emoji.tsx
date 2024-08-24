@@ -1,34 +1,57 @@
 import React from "react";
-import Icon from "@mui/material/Icon";
 import Star from "@mui/icons-material/Star";
 import StarOutlined from "@mui/icons-material/StarOutline";
-import DeleteIcon from "@mui/icons-material/Delete";
 import {useEffect} from "react";
 import {Paper, Typography} from "@mui/material";
 
 interface EmojiProps {
   htmlTag: string[];
+  category: string;
 }
-function saveToFavorites(htmlTag: string) {
-  localStorage.setItem(htmlTag, htmlTag);
-  console.log("saved to favorites");
+interface FavoriteItem {
+  htmlTag: string;
+  category: string;
 }
+
+function saveToFavorites(htmlTag: string, category: string) {
+  const favorites: FavoriteItem[] = JSON.parse(
+    localStorage.getItem("favorites") || "[]"
+  );
+
+  if (!favorites.some(item => item.htmlTag === htmlTag)) {
+    favorites.push({htmlTag, category});
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+    console.log("saved to favorites");
+  }
+}
+
 function removeFromFavorites(htmlTag: string) {
-  console.log(htmlTag);
-  localStorage.removeItem(htmlTag);
+  const favorites: FavoriteItem[] = JSON.parse(
+    localStorage.getItem("favorites") || "[]"
+  );
+  const updatedFavorites = favorites.filter(item => item.htmlTag !== htmlTag);
+  localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  console.log("removed from favorites");
 }
 function Emoji(props: EmojiProps): JSX.Element {
   const [isFav, setIsFav] = React.useState(false);
   useEffect(() => {
-    setIsFav(!!localStorage.getItem(props.htmlTag.join("_")));
-  }, [props.htmlTag]);
+    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+    const isFavorite: boolean = favorites.some(
+      (item: FavoriteItem) =>
+        item.htmlTag.toString() === props.htmlTag.join("_")
+    );
+    console.log("favorites", favorites);
+    setIsFav(isFavorite);
+    console.log("prop" + props.htmlTag.join("_"));
+  }, [props.htmlTag, props.category]);
 
   const handleFavoriteClick = () => {
     if (isFav) {
       removeFromFavorites(props.htmlTag.join("_"));
       //   setIsFav(false);
     } else {
-      saveToFavorites(props.htmlTag.join("_"));
+      saveToFavorites(props.htmlTag.join("_"), props.category);
       //   setIsFav(true);
     }
     setIsFav(!isFav);

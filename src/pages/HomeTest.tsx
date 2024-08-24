@@ -25,7 +25,10 @@ function Home() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [category, setCategory] = React.useState("random");
-  const getEmojisCategory = useGetEmojisCategory(category);
+  const getEmojisCategory = {
+    data: {htmlCode: ["🕜"], category: "Flags", group: "Flags"},
+    isLoading: false,
+  };
   // if (!getEmojisCategory.data) {
   //   return <CircularProgress />;
   // }
@@ -68,10 +71,7 @@ function Home() {
             <CircularProgress />
           </Paper>
         ) : (
-          <Emoji
-            htmlTag={getEmojisCategory.data.htmlCode}
-            category={getEmojisCategory.data.category}
-          />
+          <Emoji htmlTag={getEmojisCategory.data.htmlCode} />
         )}
 
         <Box
@@ -137,9 +137,7 @@ function Home() {
         variant="contained"
         color="primary"
         sx={{m: 3, width: "160px"}}
-        onClick={() => {
-          getEmojisCategory.refetch();
-        }}
+        onClick={() => {}}
       >
         Generate new
       </Button>
