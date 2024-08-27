@@ -7,7 +7,7 @@ import FavouriteBar from "./components/Sidebar";
 function App() {
   return (
     <>
-      <FavouriteBar />
+      <Home />
     </>
   );
 }

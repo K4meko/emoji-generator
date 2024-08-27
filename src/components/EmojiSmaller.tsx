@@ -33,7 +33,7 @@ function saveToFavorites(htmlTag: string, category: string) {
     console.log("saved to favorites");
   }
 }
-function Emoji(props: EmojiProps): JSX.Element {
+function EmojiXs(props: EmojiProps): JSX.Element {
   const [isFav, setIsFav] = React.useState(false);
   const favorites = useFavStore(state => state.favItems);
   useFavStore.subscribe(l => {
@@ -66,8 +66,8 @@ function Emoji(props: EmojiProps): JSX.Element {
       elevation={4}
       sx={{
         p: 1,
-        width: "160px",
-        height: "190px",
+        width: "90px",
+        height: "120px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -77,7 +77,7 @@ function Emoji(props: EmojiProps): JSX.Element {
       {props.htmlTag.length > 1 ? (
         <div>
           <Typography
-            variant="h1"
+            variant="h2"
             dangerouslySetInnerHTML={{
               __html: props.htmlTag[0] + props.htmlTag[1],
             }}
@@ -86,7 +86,7 @@ function Emoji(props: EmojiProps): JSX.Element {
       ) : (
         <div>
           <Typography
-            variant="h1"
+            variant="h2"
             dangerouslySetInnerHTML={{
               __html: props.htmlTag[0],
             }}
@@ -102,4 +102,4 @@ function Emoji(props: EmojiProps): JSX.Element {
   );
 }
 
-export default Emoji;
+export default EmojiXs;

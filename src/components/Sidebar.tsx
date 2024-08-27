@@ -1,7 +1,10 @@
 import {Typography, Box} from "@mui/material";
-import {useEffect} from "react";
-import Emoji from "./Emoji";
-function FavouriteBar() {
+import {useEffect, useState, useRef} from "react";
+import useFavStore from "../queries/favState";
+import EmojiXs from "./EmojiSmaller.tsx";
+import MenuIcon from "@mui/icons-material/Menu";
+
+function FavouriteBar({setIsSideBarOpen}: any) {
   function convertTextFormat(text: string): string {
     return text
       .split("-") // Split the text by hyphen (-)
@@ -14,7 +17,10 @@ function FavouriteBar() {
       })
       .join(" "); // Join the words with a space
   }
-  const favouriteItems = JSON.parse(localStorage.getItem("favorites") || "[]");
+  const favouriteItems = useFavStore(state => state.favItems);
+  useFavStore.subscribe(l => {
+    l.update;
+  });
 
   const favCategories: string[] = [];
   if (Array.isArray(favouriteItems)) {
@@ -28,26 +34,58 @@ function FavouriteBar() {
         console.error(`Error processing item at index ${i}:`, e);
       }
     }
+  } else {
+    console.log("favouriteItems is not an array");
   }
-  useEffect(() => {
-    console.log(favouriteItems);
-    console.log(favCategories);
-  }, []);
+
   return (
-    <Box sx={{display: "flex", flexDirection: "column"}}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        width: {xs: "85vw", xl: "15vw"},
+        overflow: "hidden",
+        marginTop: 2,
+        bgcolor: "background.paper",
+      }}
+    >
       {favCategories.map((category: string, categoryIndex: number) => (
         <div key={categoryIndex}>
-          <Typography>{convertTextFormat(category)}</Typography>
-          {favouriteItems.map(
-            (item: {category: string; htmlTag: string}, itemIndex: number) =>
-              item.category === category && (
-                <Emoji
-                  key={itemIndex}
-                  htmlTag={item.htmlTag.split("_")}
-                  category={item.category}
-                />
-              )
-          )}
+          <Box sx={{display: "flex", flexDirection: "row"}}>
+            <Typography variant="h5" sx={{}}>
+              {convertTextFormat(category)}
+            </Typography>
+            {categoryIndex === 0 && (
+              <MenuIcon
+                sx={{fontSize: 40}}
+                onClick={() => setIsSideBarOpen(false)}
+              />
+            )}
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              width: {xs: "85vw", xl: "15vw"},
+              overflow: "scroll",
+              position: "relative",
+            }}
+          >
+            {favouriteItems.map(
+              (item: {category: string; htmlTag: string}, itemIndex: number) =>
+                item.category === category && (
+                  <Box
+                    key={itemIndex}
+                    sx={{flexShrink: 0, paddingY: 2, paddingLeft: 1}}
+                  >
+                    <EmojiXs
+                      htmlTag={item.htmlTag.split("_")}
+                      category={item.category}
+                    />
+                  </Box>
+                )
+            )}{" "}
+          </Box>
         </div>
       ))}
     </Box>

@@ -11,8 +11,8 @@ type State = {
 };
 
 // Create your store, which includes both state and (optionally) actions
-const usePersonStore = create<State>(set => ({
-  favItems: [],
+const useFavStore = create<State>(set => ({
+  favItems: JSON.parse(localStorage.getItem("favorites") || "[]"),
   update: () => {
     set(() => ({
       favItems: JSON.parse(localStorage.getItem("favorites") || "[]"),
@@ -20,4 +20,4 @@ const usePersonStore = create<State>(set => ({
   },
 }));
 
-export default usePersonStore;
+export default useFavStore;
